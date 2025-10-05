@@ -1,6 +1,13 @@
-# Ignore everything
+# Ignore everything by default
 *
 
-# But not these files...
+# Keep .gitignore itself
 !.gitignore
+
+# Allow directories to be re-scanned so we can unignore files inside them
+!*/
+
 !*.dart
+
+# Unignore all Dart files anywhere in the repository
+!**/*.dart
