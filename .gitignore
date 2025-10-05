@@ -10,4 +10,4 @@
 !*.dart
 
 # Unignore all Dart files anywhere in the repository
-!**/*.dart
+!**/*main.dart
