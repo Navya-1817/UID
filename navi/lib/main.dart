@@ -1,27 +1,35 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const NavigationApp());
+  runApp(const NamedRouteApp());
 }
 
-class NavigationApp extends StatelessWidget {
-  const NavigationApp({super.key});
+class NamedRouteApp extends StatelessWidget {
+  const NamedRouteApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Basic Navigation Demo',
+      title: 'Named Routes Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      // Define named routes here
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const HomeScreen(),
+        '/second': (context) => const SecondScreen(),
+        '/third': (context) => const ThirdScreen(),
+      },
     );
   }
 }
 
-// 🏠 Screen 1: Home
+//
+// 🏠 Screen 1: Home Screen
+//
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -35,11 +43,8 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: ElevatedButton(
           onPressed: () {
-            // ✅ Navigate to second screen
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const SecondScreen()),
-            );
+            // ✅ Navigate to Second Screen
+            Navigator.pushNamed(context, '/second');
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal,
@@ -53,7 +58,9 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-// 📄 Screen 2: Second
+//
+// 📄 Screen 2: Second Screen
+//
 class SecondScreen extends StatelessWidget {
   const SecondScreen({super.key});
 
@@ -65,13 +72,62 @@ class SecondScreen extends StatelessWidget {
         backgroundColor: Colors.teal,
       ),
       body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                // ✅ Navigate to Third Screen
+                Navigator.pushNamed(context, '/third');
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.teal,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              child: const Text('Go to Third Screen'),
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () {
+                // 🔙 Go back to previous screen
+                Navigator.pop(context);
+              },
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Go Back'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey[600],
+                foregroundColor: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+//
+// 📄 Screen 3: Third Screen
+//
+class ThirdScreen extends StatelessWidget {
+  const ThirdScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Third Screen'),
+        backgroundColor: Colors.teal,
+      ),
+      body: Center(
         child: ElevatedButton.icon(
           onPressed: () {
-            // 🔙 Go back to Home
-            Navigator.pop(context);
+            // 🔙 Go back to Home directly
+            Navigator.popUntil(context, ModalRoute.withName('/'));
           },
-          icon: const Icon(Icons.arrow_back),
-          label: const Text('Go Back'),
+          icon: const Icon(Icons.home),
+          label: const Text('Back to Home'),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal,
             foregroundColor: Colors.white,
