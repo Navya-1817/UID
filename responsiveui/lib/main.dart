@@ -10,7 +10,7 @@ class ResponsiveApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Responsive UI',
+      title: 'Responsive UI Example',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
@@ -26,112 +26,77 @@ class ResponsiveHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Access MediaQuery
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+
+    // Define breakpoints
+    const mobileBreakpoint = 600;
+    const tabletBreakpoint = 1000;
+
+    int crossAxisCount;
+    double fontSize;
+    EdgeInsetsGeometry padding;
+
+    if (screenWidth < mobileBreakpoint) {
+      // 📱 Mobile layout
+      crossAxisCount = 1;
+      fontSize = 16;
+      padding = const EdgeInsets.all(16);
+    } else if (screenWidth < tabletBreakpoint) {
+      // 💻 Tablet layout
+      crossAxisCount = 2;
+      fontSize = 18;
+      padding = const EdgeInsets.all(24);
+    } else {
+      // 🖥️ Desktop layout
+      crossAxisCount = 3;
+      fontSize = 20;
+      padding = const EdgeInsets.all(32);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Responsive Layout'),
+        title: const Text('Responsive with MediaQuery'),
         backgroundColor: Colors.teal,
       ),
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          // Breakpoints
-          if (constraints.maxWidth < 600) {
-            // Mobile layout
-            return const MobileLayout();
-          } else if (constraints.maxWidth < 1000) {
-            // Tablet layout
-            return const TabletLayout();
-          } else {
-            // Desktop layout
-            return const DesktopLayout();
-          }
-        },
-      ),
-    );
-  }
-}
-
-class MobileLayout extends StatelessWidget {
-  const MobileLayout({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        _buildCard('Card 1'),
-        _buildCard('Card 2'),
-        _buildCard('Card 3'),
-      ],
-    );
-  }
-
-  Widget _buildCard(String title) => Card(
-        color: Colors.white,
-        elevation: 3,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Center(child: Text(title, style: const TextStyle(fontSize: 18))),
+      body: Padding(
+        padding: padding,
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: crossAxisCount,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 16,
+          ),
+          itemCount: 6,
+          itemBuilder: (context, index) {
+            return Card(
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Text(
+                  'Card ${index + 1}',
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            );
+          },
         ),
-      );
-}
-
-class TabletLayout extends StatelessWidget {
-  const TabletLayout({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      padding: const EdgeInsets.all(16),
-      crossAxisCount: 2,
-      mainAxisSpacing: 16,
-      crossAxisSpacing: 16,
-      children: const [
-        CardItem(title: 'Card 1'),
-        CardItem(title: 'Card 2'),
-        CardItem(title: 'Card 3'),
-        CardItem(title: 'Card 4'),
-      ],
-    );
-  }
-}
-
-class DesktopLayout extends StatelessWidget {
-  const DesktopLayout({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return GridView.count(
-      padding: const EdgeInsets.all(32),
-      crossAxisCount: 3,
-      mainAxisSpacing: 24,
-      crossAxisSpacing: 24,
-      children: const [
-        CardItem(title: 'Card 1'),
-        CardItem(title: 'Card 2'),
-        CardItem(title: 'Card 3'),
-        CardItem(title: 'Card 4'),
-        CardItem(title: 'Card 5'),
-        CardItem(title: 'Card 6'),
-      ],
-    );
-  }
-}
-
-class CardItem extends StatelessWidget {
-  final String title;
-  const CardItem({required this.title, super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Center(
-        child: Text(
-          title,
-          style: const TextStyle(fontSize: 18),
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.teal,
+        height: isPortrait ? 50 : 40,
+        child: Center(
+          child: Text(
+            'Screen width: ${screenWidth.toStringAsFixed(0)} | height: ${screenHeight.toStringAsFixed(0)}',
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
       ),
     );
