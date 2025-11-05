@@ -4,11 +4,11 @@
 # Keep .gitignore itself
 !.gitignore
 
-# Allow directories to be re-scanned so we can unignore files inside them
-!*/
+# Allow Git to recurse into all directories so negations can take effect
+!**/
+
+# Unignore all Dart files anywhere in the repository
+!**/*.dart
 
 !basicdart.dart
 !hello.dart
-
-# Unignore all Dart files anywhere in the repository
-!**/*main.dart
